@@ -92,7 +92,7 @@ hrc = exp(1i*pi*Kr*thr.^2).*(0<thr&thr<Tw);  % 距离维匹配滤波器
 SAR1 =ifft((fft(Srnm,Nfast,2).*(ones(Mslow,1)*conj(fft(hrc,Nfast,2)))),Nfast,2);
 
 figure;
-imagesc(tr,ta,255-abs(SAR1));                       
+imagesc(tr,ta,-abs(SAR1));                       
 xlabel('快时间');
 ylabel('慢时间');
 title('快时间维脉压(插值前）');
@@ -103,14 +103,13 @@ colormap(gray)
 L = 8;
 trs = linspace(min(tr),max(tr),L*Nfast);
 SAR1f = fft(SAR1,Nfast,2);
-SAR11f = [SAR1f(:,1:floor((Nfast+1)/2)),zeros(Mslow,(L-1)*Nfast),...
-    SAR1f(:,floor((Nfast+1)/2)+1:end)];
+SAR11f = [SAR1f(:,1:floor((Nfast+1)/2)),zeros(Mslow,(L-1)*Nfast),SAR1f(:,floor((Nfast+1)/2)+1:end)];
 SAR2 = ifft(SAR11f,L*Nfast,2);
 
 figure;
-imagesc(trs,ta,255-abs(SAR2));                       
-xlabel('快时间');
-ylabel('慢时间');
+imagesc(sqrt((tr*c/2).^2-H^2),ta*vr,-abs(SAR2));                       
+xlabel('距离/m');
+ylabel('方位/m');
 title('快时间维脉压(插值后）');
 colormap(gray)
 
@@ -148,7 +147,7 @@ title('SAR图像(未插值）');
 colormap(gray)
 
 figure;
-imagesc(Rg,Az,255-abs(SAR3));                       
+imagesc(Rg,Az,-abs(SAR3));                       
 xlabel('地距/m');
 ylabel('方位/m');
 title('SAR图像(插值前）');
@@ -191,7 +190,7 @@ title('SAR图像(插值后）');
 colormap(gray)
 
 figure;
-imagesc(Rg,Az,255-abs(SAR4));                       
+imagesc(Rg,Az,-abs(SAR4));                       
 xlabel('地距/m');
 ylabel('方位/m');
 title('SAR图像(插值后）');
